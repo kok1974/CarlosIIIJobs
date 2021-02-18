@@ -88,6 +88,7 @@ if(!class_exists('CarlosIIIJobs_job_type'))
          */
         public function send_mail($post_id)
         {
+            $post = get_post($post_id);
             if($emails = get_option('CarlosIIIJob_suscriptores')) {
                 $post = get_post($post_id);
                 $author = $post->post_author; /* Post author ID. */
@@ -108,7 +109,24 @@ if(!class_exists('CarlosIIIJobs_job_type'))
 
             }
         } 
+        /* Send mail to subscribers
+        */
+       public function getSuscriptors($post)
+       {
+        global $wpdb;
+        $titulacion = get_post_meta($post, 'titulacion', true);
 
+        $table_name = $wpdb->prefix . "c3jSuscriptores";
+				// convendría no duplicar este código
+				// Una buena forma sería crear una constante en la clase CarlosIIIJobs con:
+				// const C3JSUSCRIPTORES_TABLE = 'c3jSuscriptores';
+				// y acceder a ella desde este código
+				// $table_name = $wpdb->prefix . CarlosIIIJobs::C3JSUSCRIPTORES_TABLE;
+			 $query = "SELECT email FROM $table_name WHERE email = %s";
+             $suscriptores = $wpdb->get_var( $wpdb->prepare($query, $titulacion)); 
+			return $suscriptores ;
+       }
+       
         /**
          * hook into WP's admin_init action hook
          */

@@ -106,13 +106,44 @@ class CarlosIIIJobs_Admin {
 		);
 
 		$emailSuscriptor = htmlspecialchars($_POST["email"]);
-        if(!$this->getSuscriptor($emailSuscriptor)) {
-            $this->addSuscriptor($emailSuscriptor);
-			$response['message'] = __("Solicitud registrada correctamente");
-		} else {
-			$response['message'] = __("Usted ya solicitó subscribirse");
+		$titulacionSuscriptor = htmlspecialchars($_POST["titulacion"]);
+
+ 		if($this->notAllowedSuscriptor($emailSuscriptor)){
+			$response['message'] = __("Dominio no permitido");
+		
+		} else{ 
+			if(!$this->getSuscriptor($emailSuscriptor)) {
+				$this->addSuscriptor($emailSuscriptor, $titulacionSuscriptor);
+				$response['message'] = __("Solicitud registrada correctamente ");
+			} else {
+				$response['message'] = __("Usted ya solicitó subscribirse");
+			} 
 		}
 		exit(json_encode($response));
+	}
+
+   	public function notAllowedSuscriptor($emailSuscriptor)
+	{
+		
+		$permitido = true;
+
+		/* 
+			global $wpdb;
+
+			$table_name = $wpdb->prefix . "options";
+				// convendría no duplicar este código
+			$query = "SELECT option_value FROM $table_name WHERE option_name = 'CarlosIIIJob_options_dominio'";
+			$emailAllowed = $wpdb->get_var( $wpdb->prepare($query, $emailSuscriptor)); 
+		*/
+
+			$emailAllowed = get_option('CarlosIIIJob_options_dominio');
+
+		if(strpos($emailSuscriptor, $emailAllowed) !==false)
+		{
+			$permitido = false;
+		}
+
+	 return $permitido;
 	}
 
 	public function getSuscriptor($emailSuscriptor) {
@@ -129,7 +160,7 @@ class CarlosIIIJobs_Admin {
 			return $existeSuscriptor > 0;
 	 }
  
-	 public function addSuscriptor($emailSuscriptor) {
+	 public function addSuscriptor($emailSuscriptor, $titulacionSuscriptor) {
 		global $wpdb;
  
 			$table_name = $wpdb->prefix . "c3jSuscriptores";
@@ -137,6 +168,7 @@ class CarlosIIIJobs_Admin {
 				$table_name,
 				array(
 						'email' => $emailSuscriptor,
+						'titulacion' => $titulacionSuscriptor,
 						'time' => current_time('mysql', 2),
 				),
 				array('%s')
