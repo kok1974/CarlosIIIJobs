@@ -130,9 +130,15 @@ class CarlosIIIJobs {
         * The class responsible for defining new Job Type
         * of the plugin.
         */
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-CarlosIIIJobs-job-type.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-CarlosIIIJobs-job-type.php';
+		
+		  /**
+         * La clase responsable de la definición del widget de subscripción.
+         */
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-CarlosIIIJobsWidgetSuscribe.php';
 	}
 
+	
 	/**
 	 * Define the locale for this plugin for internationalization.
 	 *
