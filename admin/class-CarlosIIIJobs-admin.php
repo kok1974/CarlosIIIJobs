@@ -105,15 +105,42 @@ class CarlosIIIJobs_Admin {
 		    'error' => false,
 		);
 
-		$suscriptores = get_option('CarlosIIIJob_suscriptores');
-		    if(!in_array(htmlspecialchars($_POST["email"]), $suscriptores )) {
-		        $suscriptores[] = htmlspecialchars($_POST["email"]);
-		        update_option('CarlosIIIJob_suscriptores', $suscriptores);
-				   $response['message'] = __("Solicitud registrada correctamente");
-			} else {
-				$response['message'] = __("Usted ya solicitó subscribirse");
-			}
-			exit(json_encode($response));
+		$emailSuscriptor = htmlspecialchars($_POST["email"]);
+        if(!$this->getSuscriptor($emailSuscriptor)) {
+            $this->addSuscriptor($emailSuscriptor);
+			$response['message'] = __("Solicitud registrada correctamente");
+		} else {
+			$response['message'] = __("Usted ya solicitó subscribirse");
 		}
+		exit(json_encode($response));
+	}
+
+	public function getSuscriptor($emailSuscriptor) {
+		global $wpdb;
+ 
+			$table_name = $wpdb->prefix . "c3jSuscriptores";
+				// convendría no duplicar este código
+				// Una buena forma sería crear una constante en la clase CarlosIIIJobs con:
+				// const C3JSUSCRIPTORES_TABLE = 'c3jSuscriptores';
+				// y acceder a ella desde este código
+				// $table_name = $wpdb->prefix . CarlosIIIJobs::C3JSUSCRIPTORES_TABLE;
+			$query = "SELECT count(email) FROM $table_name WHERE email = %s";
+			$existeSuscriptor = $wpdb->get_var( $wpdb->prepare($query, $emailSuscriptor)); 
+			return $existeSuscriptor > 0;
+	 }
+ 
+	 public function addSuscriptor($emailSuscriptor) {
+		global $wpdb;
+ 
+			$table_name = $wpdb->prefix . "c3jSuscriptores";
+			$wpdb->insert(
+				$table_name,
+				array(
+						'email' => $emailSuscriptor,
+						'time' => current_time('mysql', 2),
+				),
+				array('%s')
+			);
+	 }
 
 }
