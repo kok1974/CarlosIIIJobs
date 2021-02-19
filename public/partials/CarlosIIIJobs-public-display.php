@@ -27,7 +27,8 @@
     echo __( 'Suscríbete para recibir nuestras ofertas de trabajo', 'CarlosIIIJobsSuscribe_widget_domain' );
     echo $args['after_widget'];
     ?>
-    <form action="http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ?>" method="post">
+   <form action="<?php echo esc_url( admin_url('admin-post.php') ); ?>" method="post">
+        <input type="hidden" name="action" value="CarlosIIIJob_suscribe">
 
         <p>
             <label for="solo-subscribe-email"><?php _e('E-Mail:', 'subscribe-to-comments'); ?>
