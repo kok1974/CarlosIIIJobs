@@ -174,8 +174,8 @@ class CarlosIIIJobs {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
-		$this->loader->add_action( 'admin_post_nopriv_CarlosIIIJob_suscribe', $plugin_admin, 'CarlosIIIJob_suscribe' );
-        $this->loader->add_action( 'admin_post_CarlosIIIJob_suscribe', $plugin_admin, 'CarlosIIIJob_suscribe' );
+		$this->loader->add_action( 'wp_ajax_nopriv_CarlosIIIJob_suscribe', $plugin_admin, 'CarlosIIIJob_suscribe' );
+        $this->loader->add_action( 'wp_ajax_CarlosIIIJob_suscribe', $plugin_admin, 'CarlosIIIJob_suscribe' );
 	}
 
 	/**

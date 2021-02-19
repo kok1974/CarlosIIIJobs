@@ -101,12 +101,19 @@ class CarlosIIIJobs_Admin {
 	}
 
 	public function CarlosIIIJob_suscribe() {
+		$response = array(
+		    'error' => false,
+		);
+
 		$suscriptores = get_option('CarlosIIIJob_suscriptores');
 		    if(!in_array(htmlspecialchars($_POST["email"]), $suscriptores )) {
 		        $suscriptores[] = htmlspecialchars($_POST["email"]);
 		        update_option('CarlosIIIJob_suscriptores', $suscriptores);
-		    }
-		    wp_safe_redirect(site_url() );
+				   $response['message'] = __("Solicitud registrada correctamente");
+			} else {
+				$response['message'] = __("Usted ya solicitó subscribirse");
+			}
+			exit(json_encode($response));
 		}
 
 }
